@@ -1,0 +1,110 @@
+* Creating and Altering a Database
+
+A SQL Server database can be created, altered and droped :-
+
+	1. Graphically using SQL Server Management Studio (SSMS) or 
+	2. Using a Query
+-------------------------------------------------------------------------------------------------------------------
+
+To Create the database using a query :- 	Create database DatabaseName
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Whether, you create a database graphically using the designer or, using a query, the following two files gets generated :-
+	
+	1) .MDF file - Data File ( Contains actual data )
+	2) .LDF file - Transaction Log File ( used to recover the database ) 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. To alter a database, once it's created 
+
+	Alter database DatabaseName Modify Name = NewDatabaseName
+
+
+2. Alternatively, you can also use system stored procedure
+	
+	Execute sp_renameDB 'OldDatabaseName', 'NewDatabaseName'
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Stored Procedures
+
+	1) System Stored Procedures
+
+	2) User Defined Stored Procedures
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* sp_helptext :- Displays the definition of a user-defined rule, default, unencrypted Transact-SQL stored procedure, 
+	        user-defined Transact-SQL function, trigger, computed column, CHECK constraint, view, or system object 
+	        such as a system stored procedure.
+
+
+	* Syntax :- 	sp_helptext [ @objname = ] 'name' [ , [ @columnname = ] computed_column_name ]
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* sp_helpindex :- Reports information about the indexes on a table or view.
+
+	* Syntax:-  	sp_helpindex [ @objname = ] 'name' 
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Ex. 
+
+	Create Database Sample1
+
+	Alter Database Sample1 Modify Name = Sample2
+
+	sp_renameDB 'Sample3', 'Sample4'
+
+
+
+
+========================================================####################======================================================================	
+
+***********************************   Deleting or Dropping a database   ************************************
+
+
+* To Delete or Drop a database
+
+	
+	Drop Database DatabaseThatYouWantToDrop
+
+
+- Dropping a database, deletes the LDF and MDF files.
+
+- You can not drop a database, if it is currently in use. You get an error stating - Cannot drop database "DatabaseName" because it is currently in use.
+
+- So, if other users are connected, you need to put the database in single user mode and then drop the database.
+
+
+	Alter Database DatabaseName SINGLE_USER With Rollback Immediate
+
+
+- With Rollback Immediate option, will rollback all incomplete transactions and closes the connection to the database
+
+- Graphically (Rollback Immediate)  :-
+	 Object Explorer  => database name => Delete => select "Close existing connections" => press Ok
+
+
+** Note :- System databases cannot be dropped. 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Ex.
+
+	Drop database Sample4
+
+===========================================================================================================================================================
+
+
+
+
+
+
+
+
+

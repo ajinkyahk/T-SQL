@@ -1,0 +1,62 @@
+***************************   Adding a default constraint - Part 4    ***************************
+
+* Default Constraint :-
+
+- A column default can be specified using Default constraint. 
+- The DEFAULT constraint is used to insert a default value into a column. 
+- The default value will be added to all new records, if no other value is specified, including NULL.
+
+===================================================================================
+
+* Altering an existing column to add a default constraint:-
+
+ALTER TABLE (TABLE_NAME)
+ADD CONSTRAINT {CONSTRAINT_NAME}
+DEFAULT {DEFAULT_VALUE} FOR {EXISTING_COLUMN_NAME}
+
+====================================================================================
+
+* Adding a new column, with default value, to an existing table:
+
+ALTER TABLE {TABLE_NAME}
+ADD {COLUMN_NAME} {DATA_TYPE} {NULL | NOT NULL}
+CONSTRAINT {CONSTRAINT_NAME} DEFAULT {DEFAULT_VALUE}
+
+=====================================================================================
+
+*Dropping a constraint:
+
+ALTER TABLE {TABLE_NAME}
+DROP CONSTRAINT {CONSTRAINT_NAME}
+
+=====================================================================================
+* Examples :-
+
+
+Select * from tblPerson
+Select* from tblGender
+--------------------------------------------------------------------------------------------------
+
+Insert into tblPerson (ID, [Name], Email) Values (7, 'Rich', 'r@r.com') 
+Insert into tblPerson (ID, [Name], Email, GenderID) Values (9, 'Sara', 's@r.com', 2);
+Insert into tblPerson (ID, Name, Email, GenderID) Values (10, 'Johnny', 'j@r.com', NULL);
+
+--------------------------------------------------------------------------------------------------
+
+ALTER TABLE tblPerson
+ADD CONSTRAINT DF_tblPerson_GenderID
+DEFAULT 3 FOR GenderID  
+
+--------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE tblPerson
+DROP CONSTRAINT DF_tblPerson_GenderID
+
+===============================================================================================
+
+
+
+
+
+
+

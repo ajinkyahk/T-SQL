@@ -1,0 +1,46 @@
+* Connecting to SQL Server
+
+Sever Type = Database Engine
+
+Server Name = (local) or . or 127.0.0.1      # if SSMS and database server is on same machine
+
+Authentication = Windows or SQL Server
+
+if SQL Server Authentication
+	Login
+	Password
+
+# loopback IP address - 127.0.0.1
+--------------------------------------------------------------------------------------------------
+
+* SQL Server Management Studio (SSMS)
+
+- SSMS is a client tool and not the server by itself
+- Developer machines (clients) connects to SQL Server using SSMS
+
+---------------------------------------------------------------------------------------------------
+
+* SSAS : SQL Server Analysis Services
+
+* SSRS : SQL Server Reporting Services
+
+* SSIS : SQL Server Integration Services
+
+---------------------------------------------------------------------------------------------------------
+
+* SSMS
+
+* Object Explorer : Left side window which shows databases
+
+* New Query Button : Opens new query editor window to write queries
+
+* master : System database
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+

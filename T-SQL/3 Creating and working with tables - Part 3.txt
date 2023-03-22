@@ -1,0 +1,154 @@
+***************  Creating and working with tables - Part 3   ***************************
+
+
+* Creating Tables :- The aim of this session is to create tblPerson and tblGender tables and establish Primary Key and Foreign Key constraints.
+
+* In SQL Server, tables can be created graphically using SQL Server Management Studio (SSMS) or using a Query.
+- Foreign key references can be added graphically using SSMS or using a query.
+
+
+	Alter table ForeignKeyTable add constraint ForeignKeyTable_ForeignKeyColumn_FK
+	FOREIGN KEY ( ForeignKeyColumn ) references PrimaryKeyTable ( PrimaryKeyColumn )
+
+
+* Foreign keys are used to enforce database integrity. In layman's terms, A foreign key in one table points to primary key in another table. 
+   The foreign key constraint prevents invalid data form being inserted into the foreign key column. The values that you enter into the foreign 
+   key column, has to be one of the values contained in the table it points to. 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Example :-
+
+-------------------------------------------------------------------------------------------------------------------------
+Use [Sample]
+Go
+
+Create Table tblGender
+(
+ID int PRIMARY KEY NOT NULL,
+Gender nvarchar(50) NOT NULL
+)
+
+------------------------------------------------------------------------------------------------------------------------------
+
+USE [sample]
+GO
+
+/****** Object:  Table [dbo].[tblPerson]    Script Date: 22-03-2023 16:14:18 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblPerson](
+	[ID] [int] NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[Email] [nvarchar](50) NOT NULL,
+	[GenderID] [int] NULL,
+
+CONSTRAINT [PK_tblPerson] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH 
+(
+PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, 
+IGNORE_DUP_KEY = OFF, 
+ALLOW_ROW_LOCKS = ON, 
+ALLOW_PAGE_LOCKS = ON, 
+OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+====================================================================================================================================================================================================
+
+
+USE [sample]
+GO
+
+/****** Object:  Table [dbo].[tblGender]    Script Date: 22-03-2023 16:24:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblGender](
+	[ID] [int] NOT NULL,
+	[Gender] [nvarchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (
+PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, 
+IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, 
+ALLOW_PAGE_LOCKS = ON, 
+OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+=============================================================================================================
+
+Alter table tblPerson add constraint tblPerson_GenderID_FK
+Foreign Key (GenderID) references tblGender (ID)
+
+===================================================================================================================================================================
+
+** Foreign Key Costraint :-
+
+USE [sample]
+GO
+
+/****** Object:  Table [dbo].[tblPerson]    Script Date: 22-03-2023 16:43:26 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblPerson](
+	[ID] [int] NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[Email] [nvarchar](50) NOT NULL,
+	[GenderID] [int] NULL,
+ CONSTRAINT [PK_tblPerson] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH 
+(
+PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, 
+IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, 
+ALLOW_PAGE_LOCKS = ON, 
+OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[tblPerson]  WITH CHECK ADD  CONSTRAINT [tblPerson_GenderID_FK] FOREIGN KEY([GenderID])
+REFERENCES [dbo].[tblGender] ([ID])
+GO
+
+ALTER TABLE [dbo].[tblPerson] CHECK CONSTRAINT [tblPerson_GenderID_FK]
+GO
+
+
+==============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
