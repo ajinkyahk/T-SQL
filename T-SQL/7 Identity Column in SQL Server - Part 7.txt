@@ -1,0 +1,55 @@
+***************************************** Identity Column in SQL Server - Part 7 **********************************************
+
+
+If a column is marked as an identity column, then the values for this column are automatically generated, when you insert a new row into the table. 
+
+Create Table tblPerson
+{
+	PersonID int Identity(1,1) Primary Key,
+	Name nvarchar(50)
+}
+
+
+Note :- Seed and Increment values are optional. If you don't specify the identity and seed they both default to 1.
+
+========================================================================================================================
+
+To explicitly supply a value for identity column
+
+1. First turn on identity insert- SET Identtity tblPerson ON
+
+2. In the insert query specify the column list
+    Insert into tblPerson (PersonID, Name) values (2, 'John)
+
+========================================================================================================================
+
+If you have deleted all the rows in a table, and you want to reset the identity column value, use DBCC CHECKPOINT command.
+
+		DBCC CHECKIDENT ('tblPerson', RESEED,0)
+
+=========================================================================================================================
+Example:-
+
+			SET IDENTITY_INSERT tblPerson1 OFF
+
+
+			DBCC CHECKIDENT(tblPerson1, RESEED, 0)
+
+==========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
