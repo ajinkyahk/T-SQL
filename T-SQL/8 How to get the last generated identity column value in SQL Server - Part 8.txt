@@ -1,0 +1,64 @@
+*************************************** How to get the last generated identity column value in SQL Server - Part 8 *********************************
+
+* SCOPE_IDENTITY()  - Same session and the same scope.
+
+* @@IDENTITY - Same session across any scope.
+
+* IDENT_CURRENT('TableName') - Specific table across any session and any scope.
+
+=============================================================================================================================
+Example :-
+
+-- User 1 session					|			-- User 2 session
+									
+Insert into Test2 values ('zzz')				|			Insert into Test2 values ('zzz')						|	
+
+Select SCOPE_IDENTITY()
+select @@IDENTITY
+select IDENT_CURRENT('Test2')			|
+						|
+Insert into dbo.Test1 values ('X')				|
+		
+select * from Test1
+select * from Test2
+
+Create Trigger trForInsert on Test1 for Insert		|
+as						|
+Begin						|	
+	Insert into Test2 values ('YYYY')
+End
+
+
+=============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
