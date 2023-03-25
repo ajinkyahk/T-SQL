@@ -10,21 +10,21 @@
 Example :-
 
 -- User 1 session					|			-- User 2 session
-									
-Insert into Test2 values ('zzz')				|			Insert into Test2 values ('zzz')						|	
+							|		
+Insert into Test2 values ('zzz')			|			Insert into Test2 values ('zzz')													|	
 
 Select SCOPE_IDENTITY()
 select @@IDENTITY
-select IDENT_CURRENT('Test2')			|
-						|
-Insert into dbo.Test1 values ('X')				|
+select IDENT_CURRENT('Test2')				|
+							|
+Insert into dbo.Test1 values ('X')			|
 		
 select * from Test1
 select * from Test2
 
 Create Trigger trForInsert on Test1 for Insert		|
-as						|
-Begin						|	
+as							|
+Begin							|	
 	Insert into Test2 values ('YYYY')
 End
 
