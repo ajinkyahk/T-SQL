@@ -1,0 +1,344 @@
+********************************************   Select statement in sql server - Part 10   ***********************************************
+
+
+* Basic select statement syntax
+
+		SELECT Column_List
+		FROM Table_Name
+
+
+* If you want to select all the columns, you can also use *. For better performance use the column list, instead of using *.
+
+				SELECT *
+				FROM Table_Name
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Example:
+
+		USE [sample]
+		GO
+
+		SELECT [ID]
+		      ,[Name]
+		      ,[Email]
+		      ,[GenderID]
+		      ,[Age]
+		      ,[city]
+	                  FROM [dbo].[tblPerson]                            # fully qualified address:-  sample.dbo.tblPerson
+
+		GO
+
+
+
+=======================================================================================================================
+
+* To Select distinct rows use DISTINCT keyword
+
+		SELECT DISTINCT Column_List
+		FROM Table_Name
+
+---------------------------------------------                  ---------------------------------------                           -----------------------------------------------------
+
+* Example: 
+		Select distinct city from tblPerson
+
+		Select distinct name, city from tblPerson                   # distinct on multiple columns
+
+==========================================================================================================================
+
+* Filtering rows with WHERE clause :-
+
+				SELECT Column_List
+				FROM Table_Name
+				WHERE Filter_Condition
+
+----------------------                                -----------------------------------------------------                                ----------------------------------------------------
+*Example: 
+
+		Select Name, Email from tblPerson where City = 'London'
+
+		Select Name, Email from tblPerson where City <> 'London'                  # not equal to in T-SQL
+
+		Select Name, Email from tblPerson where City != 'London' 	        # not equal to in T-SQL
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		Select * From tblPerson Where Age = 20 or Age = 23 or Age = 29
+				OR
+		Select * From tblPerson Where Age IN (20, 23, 29)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+		Select * From tblPerson Where Age BETWEEN 20 AND 25
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Wild Cards:
+============
+		Select * From tblPerson Where City LIKE 'L%'
+		
+		Select * From tblPerson Where Email LIKE '%@%'
+
+		------------------------------------------------------------------------------
+
+		Select * From tblPerson Where Email NOT LIKE '%@%'
+
+		--------------------------------------------------------------------------------
+	
+		Select * From tblPerson Where Email LIKE '_@_.com'
+
+		Select * From tblPerson Where Email NOT LIKE '_@_.com'
+
+		---------------------------------------------------------------------------------
+
+		Select * From tblPerson Where NAME LIKE '[MST]%'                                  # select NAME starts with M or S or T
+
+		Select * From tblPerson Where NAME LIKE '[^MST]%'                                # select Name does not start with M or S or T
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		Select * From tblPerson Where ( City IN ('Mumbai', 'London')) AND Age > 25
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Order BY :-
+==========
+
+		Select * From tblPerson Order By Name
+
+		Select * From tblPerson Order By Name DESC
+
+		Select * From tblPerson Order By Name ASC, Age DESC                    # Order By Multiple Columns
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Top :-
+=====
+
+		Select Top 2 * From tblPerson
+
+		Select Top 2 Name, Age From tblPerson
+
+		Select Top 1 Percent * From tblPerson                                       # select No Of Percent records   1 Percent 
+
+		Select Top 50 Percent * From tblPerson                                     # 50 Percent 
+
+		Select Top 1 * From tblPerson Order By Age DESC
+
+
+===========================================================================================================================
+
+* Note: Text values, should be present in single quotes, but not required for numeric values.
+
+
+
+* Different operators that can be used in a where clause
+
+
+* Arithmetic Operators (Transact-SQL)Arithmetic Operators (Transact-SQL):-
+
+Operator			Meaning
+
++ (Add)			Addition
+
+- (Subtract)		Subtraction
+
+* (Multiply)		Multiplication
+
+/ (Divide)			Division
+
+% (Modulo)		Returns the integer remainder of a division. For example, 12 % 5 = 2 because the remainder of 12 divided by 5 is 2.
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* Comparison Operators (Transact-SQL) :-
+
+Operator				Meaning
+
+= (Equals)				Equal to
+
+> (Greater Than)			Greater than
+
+< (Less Than)			Less than
+
+>= (Greater Than or Equal To)		Greater than or equal to
+
+<= (Less Than or Equal To)		Less than or equal to
+
+<> (Not Equal To)			Not equal to
+
+!= (Not Equal To)			Not equal to (not ISO standard)
+
+!< (Not Less Than)			Not less than (not ISO standard)
+
+!> (Not Greater Than)		Not greater than (not ISO standard)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Compound Operators (Transact-SQL) :-
+
+Operator		Action
+
++=		Adds some amount to the original value and sets the original value to the result.
+
+-=		Subtracts some amount from the original value and sets the original value to the result.
+
+*=		Multiplies by an amount and sets the original value to the result.
+
+/=		Divides by an amount and sets the original value to the result.
+
+%=		Divides by an amount and sets the original value to the modulo.
+
+&=		Performs a bitwise AND and sets the original value to the result.
+
+^=		Performs a bitwise exclusive OR and sets the original value to the result.
+
+|=		Performs a bitwise OR and sets the original value to the result.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Logical Operators (Transact-SQL) :-
+
+Operator		Meaning
+
+ALL		TRUE if all of a set of comparisons are TRUE.
+
+AND		TRUE if both Boolean expressions are TRUE.
+
+ANY		TRUE if any one of a set of comparisons are TRUE.
+
+BETWEEN	TRUE if the operand is within a range.
+
+EXISTS		TRUE if a subquery contains any rows.
+
+IN		TRUE if the operand is equal to one of a list of expressions.
+
+LIKE		TRUE if the operand matches a pattern.
+
+NOT		Reverses the value of any other Boolean operator.
+
+OR		TRUE if either Boolean expression is TRUE.
+
+SOME		TRUE if some of a set of comparisons are TRUE.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* String Concatenation operator :-
+
+
++ (String Concatenation)
+
++= (String Concatenation Assignment)
+
+% (Wildcard - Character(s) to Match)
+
+[ ] (Wildcard - Character(s) to Match)
+
+[^] (Wildcard - Character(s) Not to Match)
+
+_ (Wildcard - Match One Character)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Unary Operators - Positive
+
+Operator		Meaning
+
++ (Positive)	Numeric value is positive.
+
+- (Negative)	Numeric value is negative.
+
+~ (Bitwise NOT)	Returns the ones complement of the number.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Bitwise operators (Transact-SQL) :-
+
+Operator						Bitwise math
+
+
+AND
+
+						1010 1010 = 170
+						0100 1011 = 75
+						-------------------
+If bits at any position are both 1, the result is 1.		0000 1010 = 10
+
+===========================================================================
+OR
+
+		1010 1010 = 170
+						0100 1011 = 75
+						--------------------
+If either bit at any position is 1, the result is 1.		1110 1011 = 235
+
+=============================================================================
+NOT
+
+						1010 1010 = 170
+						---------------------
+Reverses the bit value at every bit position.			0101 0101 = 85
+
+=============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
