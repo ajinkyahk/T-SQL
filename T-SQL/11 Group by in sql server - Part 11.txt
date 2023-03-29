@@ -1,0 +1,195 @@
+*********************************************  Group by in sql server - Part 11  *****************************************************
+
+
+* Group by clause is used to group a selected set of rows into a set of summary rows by the values of one or more columns or expressions. 
+    It is always used in conjunction with one or more aggregate functions.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*In SQL Server we have got lot of aggregate functions. Examples
+1. Count()
+2. Sum()
+3. avg()
+4. Min()
+5. Max()
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Examples :-
+===========
+
+			Select SUM(Salary) From tblEmployee
+			_____________________________________	
+
+		
+			Select MIN(Salary) From tblEmployee
+
+			______________________________________			
+
+
+			Select MAX(Salary) From tblEmployee
+
+________________________________________________________________________________________________________________________
+
+
+* I want an sql query, which gives total salaries paid by City. The output should be as shown below.
+
+			Select City, SUM(Salary) as TotalSalary 
+			From tblEmployee
+			Group By City
+
+[*]Query for retrieving total salaries by city: We are applying SUM() aggregate function on Salary column, and grouping by city column. 
+     This effectively adds, all salaries of employees with in the same city.
+
+
+	__________________________________                 *******               ______________________________________
+
+
+*Note: If you omit, the group by clause and try to execute the query, you get an error - 
+Column 'tblEmployee.City' is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause. 
+
+---------------------------------------------------------------------///////////////////////////--------------------------------------------------------------------------------------
+
+* Now, I want an sql query, which gives total salaries and total number of employees by City, and by gender :-
+
+		Select City, Gender, SUM(Salary) as TotalSalary 
+		From tblEmployee
+		Group By City, Gender
+		Order By City, Gender Desc
+
+                -----------------------------------------------------------------------------------------------------------------------------------
+
+
+* Now, I want an sql query, which gives total salaries and total number of employees by Gender, and by City :-
+
+			Select Gender, City, SUM(Salary) as TotalSalary 
+			From tblEmployee
+			Group By Gender, City
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Query for retrieving total salaries and total number of employees by City, and by gender: 
+	- The only difference here is that, we are using Count() aggregate function.
+
+
+		Select Gender, City, SUM(Salary) as TotalSalary, COUNT(ID) As [Total Employee]               # use [ ] allows space in column name
+ 		From tblEmployee							       # Total Employee
+		Group By Gender, City
+
+
+===================================================================================================================
+
+
+* Filtering Groups: WHERE clause is used to filter rows before aggregation, where as HAVING clause is used to filter groups after aggregations. 
+   The following 2 queries produce the same result.
+
+
+			Select Gender, City, SUM(Salary) as TotalSalary, COUNT(ID) As [Total Employee]
+			From tblEmployee
+			where Gender = 'Male'
+			Group By Gender, City
+
+			---------------------------------------------------------------------------------------------------------------
+
+			Select Gender, City, SUM(Salary) as TotalSalary, COUNT(ID) As [Total Employee]
+			From tblEmployee
+			Group By Gender, City
+			having Gender = 'Male'
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Filtering rows using WHERE clause, before aggrgations take place:
+
+
+			Select City, SUM(Salary) as TotalSalary
+			from tblEmployee
+			Where City = 'London'
+			group by City
+
+
+* Filtering groups using HAVING clause, after all aggrgations take place:
+		
+			Select City, SUM(Salary) as TotalSalary
+			from tblEmployee
+			group by City
+			Having City = 'London'
+
+
+* Note :- 
+	From a performance standpoint, you cannot say that one method is less efficient than the other. 
+	Sql server optimizer analyzes each statement and selects an efficient way of executing it. 
+	As a best practice, use the syntax that clearly describes the desired result. 
+	Try to eliminate rows that you wouldn't need, as early as possible.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* It is also possible to combine WHERE and HAVING :-
+
+
+			Select City, SUM(Salary) as TotalSalary
+			From tblEmployee
+			Where Gender = 'Male'
+			Group By City
+			Having City = 'London'
+
+=================================================================================================================
+
+* Difference between WHERE and HAVING clause:-
+
+1. WHERE clause can be used with - Select, Insert, and Update statements, where as HAVING clause can only be used with the Select statement.
+
+2. WHERE filters rows before aggregation (GROUPING), where as, HAVING filters groups, after the aggregations are performed.
+
+3. Aggregate functions cannot be used in the WHERE clause, unless it is in a sub query contained in a HAVING clause, 
+    whereas, aggregate functions can be used in Having clause.
+
+=====================================================================================================================
+
+Select SUM(Salary) From tblEmployee
+group by City
+having SUM(Salary)>10000                                    # possible
+
+--------------------------------------------------------------------------------
+
+Select SUM(Salary) From tblEmployee
+where SUM(Salary) > 10000
+group by City			#An aggregate may not appear in the WHERE clause unless it is in a subquery contained in a HAVING clause 
+				  or a select list, and the column being aggregated is an outer reference.
+
+
+===========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
