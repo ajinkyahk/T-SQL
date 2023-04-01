@@ -1,0 +1,141 @@
+************************************************    Self join in sql server - Part 14      *************************************************
+
+
+* Joining a table with itself is called as SELF JOIN. 
+   SELF JOIN is not a different type of JOIN. 
+   It can be classified under any type of JOIN - 
+		INNER, 
+		OUTER (Left, Right, Full)
+		CROSS Joins. 
+   
+
+
+
+
+
+====================================================================================================================
+
+
+* tblEmployee :-
+
+EmployeeID	Name	ManagerID
+1		Mike	3
+2		Rob	1
+3		Todd	NULL
+4		Ben	1
+5		Sam	1
+
+
+=====================================================================================================================
+
+Self Join Query:
+A MANAGER is also an EMPLOYEE. 
+Both the, EMPLOYEE and MANAGER rows, are present in the same table. 
+
+- Here we are joining tblEmployee with itself using different alias names, E for Employee and M for Manager. 
+
+- We are using LEFT JOIN, to get the rows with ManagerId NULL. 
+
+- You can see in the output TODD's record is also retrieved, but the MANAGER is NULL. 
+   If you replace LEFT JOIN with INNER JOIN, you will not get TODD's record.
+
+
+	Select 		E.Name as Employee, M.Name as Manager
+	from 		tblEmployee E
+	Left Join 		tblEmployee M
+	On 		E.ManagerId = M.EmployeeId
+
+
+
+Employee	Manager
+Mike	Todd
+Rob	Mike
+Todd	NULL
+Ben	Mike
+Sam	Mike
+
+========================================================================================================================
+
+* Inner Self Join :-
+
+
+		Select 		E.Name AS Employee , M.Name AS Manager
+		From 		tblEmployee AS E
+		INNER JOIN 	tblEmployee AS M
+		ON 		E.ManagerID = M.EmployeeID
+
+
+Employee	Manager
+Rob	Mike
+Ben	Mike
+Sam	Mike
+Mike	Todd
+
+=================================================================================================================
+
+* Cross Self Join :-
+
+		
+		Select 		E.Name AS Employee , M.Name AS Manager
+		From 		tblEmployee AS E
+		CROSS JOIN 	tblEmployee AS M
+
+
+Employee	Manager
+Mike	Mike
+Rob	Mike
+Todd	Mike
+Ben	Mike
+Sam	Mike
+Mike	Rob
+Rob	Rob
+Todd	Rob
+Ben	Rob
+Sam	Rob
+Mike	Todd
+Rob	Todd
+Todd	Todd
+Ben	Todd
+Sam	Todd
+Mike	Ben
+Rob	Ben
+Todd	Ben
+Ben	Ben
+Sam	Ben
+Mike	Sam
+Rob	Sam
+Todd	Sam
+Ben	Sam
+Sam	Sam
+
+
+=========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
