@@ -1,0 +1,109 @@
+******************************************    Advanced or intelligent joins in sql server - Part 13     ******************************************
+
+* In this video session we will learn about
+	1. Advanced or intelligent joins in SQL Server
+	2. Retrieve only the non matching rows from the left table
+	3. Retrieve only the non matching rows from the right table
+	4. Retrieve only the non matching rows from both the left and right table
+
+=======================================================================================================================
+
+* How to retrieve only the non matching rows from the left table. The output should be as shown below :-
+
+	Select 		Name, Gender, Salary, DepartmentName
+	From 		tblEmployee as e
+	LEFT JOIN 	tblDepartment AS d
+	ON 		e.DepartmentId=d.ID
+	Where 		d.DepartmentName IS NULL
+
+		OR
+
+	Select 		Name, Gender, Salary, DepartmentName
+	From 		tblEmployee as e
+	LEFT JOIN 	tblDepartment AS d
+	ON		e.DepartmentId=d.ID
+	Where 		e.DepartmentId IS NULL
+
+
+
+Name	Gender	Salary	DepartmentName
+James	Male      	6500	NULL
+Russell	Male      	8800	NULL
+
+==========================================================================================================================
+
+* How to retrieve only the non matching rows from the right table :-
+
+	Select 		Name, Gender, Salary, DepartmentName
+	From 		tblEmployee as e
+	RIGHT JOIN 	tblDepartment as d
+	ON 		e.DepartmentId = d.ID
+	Where 		e.ID IS NULL
+
+
+
+Name	Gender	Salary	DepartmentName
+NULL	NULL	NULL	Other Department
+
+=========================================================================================================================
+
+* How to retrieve only the non matching rows from both the left and right table. Matching rows should be eliminated. :-
+
+
+	Select 		Name, Gender, Salary, DepartmentName
+	From 		tblEmployee as e
+	Full JOIN 		tblDepartment as d
+	ON 		e.DepartmentId=d.ID
+	where 		(e.DepartmentId IS NULL) OR (d.id IS NULL)
+
+
+
+Name	Gender	Salary	DepartmentName
+James	Male      	6500	NULL
+Russell	Male      	8800	NULL
+NULL	NULL	NULL	Other Department
+
+==========================================================================================================================
+	 
+* In SQL server do not use equal to operator '=' to comape with NULL always use IS keyword :
+
+		
+		e.ID IS NULL     # allowed
+		
+		e.ID = NULL      # not allowed
+
+
+========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
