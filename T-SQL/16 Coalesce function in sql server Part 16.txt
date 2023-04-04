@@ -47,7 +47,7 @@ Id	Name
 
 
 		Select Id, COALESCE(FirstName, MiddleName, LastName) AS Name
-		From tblEmployee2
+		From tblEmployee
 	
 
 =========================================================================================================================
