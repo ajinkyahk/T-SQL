@@ -1,0 +1,172 @@
+*******************************************    Different ways to replace NULL in sql server - Part 15     **********************************
+
+
+* Consider the Employees table below.
+
+EmployeeID	Name	ManagerID
+1		Mike	3
+2		Rob	1
+3		Todd	NULL
+4		Ben	1
+5		Sam	1
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* In Part 14, we have learnt writing a LEFT OUTER SELF JOIN query, which produced the following output.
+
+Employee	Manager
+Mike	Todd
+Rob	Mike
+Todd	NULL
+Ben	Mike
+Sam	Mike
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* In the output, MANAGER column, for Todd's rows is NULL. I want to replace the NULL value, with 'No Manager' :-
+
+
+1. Replacing NULL value using ISNULL() function :-
+	 We are passing 2 parameters to IsNULL() function. If M.Name returns NULL, then 'No Manager' string is used as the replacement value.
+
+
+
+	SELECT		E.Name as Employee, ISNULL(M.Name,'No Manager') as Manager
+	FROM 		tblEmployee E
+	LEFT JOIN 	tblEmployee M
+	ON 		E.ManagerID = M.EmployeeID
+
+
+Employee	Manager
+Mike	Todd
+Rob	Mike
+Todd	No Manager
+Ben	Mike
+Sam	Mike
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Replacing NULL value using CASE Statement :-
+
+	SELECT 		E.Name as Employee, 
+	CASE 	
+		WHEN 	M.Name IS NULL 
+		THEN 	'No Manager' 
+		ELSE 	M.Name 
+		END 	as Manager
+	FROM  		tblEmployee E
+	LEFT JOIN 	tblEmployee M
+	ON   		E.ManagerID = M.EmployeeID
+
+
+Employee	Manager
+Mike	Todd
+Rob	Mike
+Todd	No Manager
+Ben	Mike
+Sam	Mike
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3 Replacing NULL value using COALESCE() function:-
+		COALESCE() function, returns the first NON NULL value.
+
+
+	SELECT 		E.Name as Employee, COALESCE(M.Name, 'No Manager') as Manager
+	FROM 		tblEmployee E
+	LEFT JOIN 	tblEmployee M
+	ON 		E.ManagerID = M.EmployeeID
+
+
+
+Employee	Manager
+Mike	Todd
+Rob	Mike
+Todd	No Manager
+Ben	Mike
+Sam	Mike
+
+=====================================================================================================================
+
+* ISNULL :-
+=========
+
+	Select ISNULL('Ajinkya', 'NO MANAGER') As Manager
+
+Manager
+Ajinkya
+
+------------------------------------------------------------------------------------------------------------------
+
+	Select ISNULL(NULL, 'NO MANAGER') As Manager
+
+Manager
+NO MANAGER
+
+============================================================================================================================
+
+* COALESCE :-
+
+
+			select COALESCE('Ajinkya', 'NO MANAGER') As Manager
+
+Manager
+Ajinkya
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+			Select COALESCE(NULL, 'NO MANAGER') As Manager
+
+
+Manager
+NO MANAGER
+=============================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
