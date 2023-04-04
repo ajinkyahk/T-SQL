@@ -1,0 +1,74 @@
+**************************************************  Coalesce function in sql server Part 16  **********************************************
+
+
+* According to the MSDN Books online COALESCE() returns the first Non NULL value. 
+   Let's understand this with an example.
+
+
+* Consider the Employees Table below. 
+   Not all employees have their First, Midde and Last Names filled. 
+   Some of the employees has First name missing, some of them have Middle Name missing and some of them last name.
+
+
+
+Id	FirstName		MiddleName	LastName
+1	Sam		NULL		NULL
+2	NULL		Todd		Tanzan
+3	NULL		NULL		Sara
+4	Ben		Parker		NULL
+5	James		Nick		Nancy
+
+
+===========================================================================================================================
+
+
+* Now, let's write a query that returns the Name of the Employee :-
+	If an employee, has all the columns filled - First, Middle and Last Names, then we only want the first name.
+
+	If the FirstName is NULL, and if Middle and Last Names are filled then, we only want the middle name. 
+	For example, Employee row with Id = 1, has the FirstName filled, so we want to retrieve his FirstName "Sam". 
+	Employee row with Id = 2, has Middle and Last names filled, but the First name is missing. 
+	Here, we want to retrieve his middle name "Todd". In short, The output of the query should be as shown below.
+
+
+Id	Name
+1	Sam
+2	Todd
+3	Sara
+4	Ben
+5	James
+
+
+=============================================================================================================
+
+* We are passing FirstName, MiddleName and LastName columns as parameters to the COALESCE() function. 
+   The COALESCE() function returns the first non null value from the 3 columns.
+
+
+
+		Select Id, COALESCE(FirstName, MiddleName, LastName) AS Name
+		From tblEmployee2
+	
+
+=========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
