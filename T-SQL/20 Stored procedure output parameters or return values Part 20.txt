@@ -1,0 +1,186 @@
+*******************************************  Stored procedure output parameters or return values Part 20 ************************************
+
+
+* What are stored procedure status variables?
+
+- Whenever, you execute a stored procedure, it returns an integer status variable. 
+	Usually, zero indicates success, and non-zero indicates failure. 
+
+- To see this yourself, execute any stored procedure from the object explorer, in sql server management studio. 
+
+	1. Right Click and select 'Execute Stored Procedure
+	2. If the procedure, expects parameters, provide the values and click OK.
+	3. Along with the result that you expect, the stored procedure, also returns a Return Value = 0
+
+So, from this we understood that, when a stored procedure is executed, it returns an integer status variable. 
+
+
+* With this in mind, let's understand the difference between output parameters and RETURN values. 
+  
+
+* We will use the Employees table below for this purpose.
+
+Id	Name	Gender	DepartmentId
+1	Sam	Male	1
+2	Ram	Male	1
+3	Sara	Female	3
+4	Todd	Male	2
+5	John	Male	3
+6	Sana	Female	2
+7	James	Male	1
+8	Rob	Male	2
+9	Steve	Male	1
+10	Pam	Female	2
+
+================================================================================================================
+
+* The following procedure returns total number of employees in the Employees table, using output parameter - @TotalCount.
+
+	
+		CREATE PROC spGetTotalCount1
+		@TotalCount int Out
+		AS
+		BEGIN
+			SELECT @TotalCount = count(Id) FROM tblEmployee3
+		END
+
+		--------------------================------------------------------------------
+
+		DECLARE @TotalEmployees int
+		EXEC spGetTotalCount1 @TotalEmployees Out
+		SELECT @TotalEmployees AS [Total Employees]
+
+
+		Total Employees
+		10
+
+		--------------------------===================----------------------------------
+
+		DECLARE @TotalEmployees int
+		EXEC spGetTotalCount1 @TotalEmployees Out
+		PRINT @TotalEmployees
+
+		
+		Messages
+		10
+
+=================================================================================================================
+
+* Re-written stored procedure using return variables :
+
+
+		CREATE PROC spGetTotalCount2
+		AS
+		BEGIN
+			RETURN (SELECT COUNT(Id) FROM tblEmployee3)
+		END
+
+
+
+		DECLARE @TotalEmployees int
+		EXEC @TotalEmployees = spGetTotalCount2
+		SELECT @TotalEmployees AS [Total Employees]
+
+
+		Total Employees
+		10
+
+=====================================================================================================================
+
+* So, we are able to achieve what we want, using output parameters as well as return values. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+*Now, let's look at example, where return status variables cannot be used, but Output parameters can be used.
+
+
+* In this SP, we are retrieving the Name of the employee, based on their Id, using the output parameter @Name :-
+
+
+		CREATE PROC spGetNameById
+		@Id int,
+		@Name nvarchar(20) out
+		AS
+		BEGIN
+			SELECT @name = Name FROM tblEmployee3 WHERE Id = @Id
+		END
+
+	
+
+* Executing spGetNameById, prints the name of the employee : -
+
+		DECLARE @EmployeeName nvarchar(20)
+		EXEC spGetNameById @Name = @EmployeeName out, @id=1
+		Print 'Name = '+@EmployeeName
+		
+		Messages
+		Name = Sam
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Now let's try to achieve the same thing, using return status variables :-
+
+
+		CREATE PROC spGetNameById1
+		@Id int
+		AS
+		BEGIN
+			RETURN (SELECT Name FROM tblEmployee3 WHERE Id = @Id)
+		END
+
+
+
+		DECLARE @EmployeeName nvarchar(20)
+		EXEC @EmployeeName = spGetNameById1 1
+		Print @EmployeeName
+
+		
+		Messages
+		Msg 245, Level 16, State 1, Procedure spGetNameById1, Line 5 [Batch Start Line 57]
+		Conversion failed when converting the nvarchar value 'Sam' to data type int.
+
+
+Executing spGetNameById2 returns an error stating 'Conversion failed when converting the nvarchar value 'Sam' to data type int.'. 
+The return status variable is an integer, and hence, when we select Name of an employee and try to return that we get a converion error. 
+
+
+So, using return values, we can only return integers, and that too, only one integer. 
+It is not possible, to return more than one value using return values, where as output parameters, can return any datatype 
+and an sp can have more than one output parameters. I always prefer, using output parameters, over RETURN values.
+
+In general, RETURN values are used to indicate success or failure of stored procedure, especially when we are dealing with nested stored procedures.
+Return a value of 0, indicates success, and any nonzero value indicates failure.
+
+
+=========================================================================================================================
+
+* Difference between return values and output parameters:
+
+-----------------------------------------------------------------------------------------------------------------------------------+
+Return Status Value			|	Output Parameters                                             |
+-----------------------------------------------------------------------------------------------------------------------------------+
+Only Integer Datatype		|	Any Datatype 			    |
+
+Only One Value			|	More than One Value			    |
+
+Use to convey success or failure   	|	Use to return values like name, count etc.	    |
+-----------------------------------------------------------------------------------------------------------------------------------+
+
+
+
+========================================================================================================================
+* Delete Stored Procedures :-
+
+	DROP PROC spGetTotalCount2
+
+=========================================================================================================================
+
+
+
+
+
+
+
+
