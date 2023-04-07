@@ -1,0 +1,289 @@
+****************************************************       Stored procedures in sql server Part 18           ****************************************
+
+
+* Stored Procedures :-
+- A stored procedure is group of T-SQL (Transact SQL) statements. 
+- If you have a situation, where you write the same query over and over again, 
+  you can save that specific query as a stored procedure and call it just by it's name.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Employee Table :-
+
+------------------------------------------------------------------
+Id	Name	Gender	DepartmentId
+-----------------------------------------------------------------
+1	Sam	Male	1
+2	Ram	Male	1
+3	Sara	Female	3
+4	Todd	Male	2
+5	John	Male	3
+6	Sana	Female	2
+7	James	Male	1
+8	Rob	Male	2
+9	Steve	Male	1
+10	Pam	Female	2
+-------------------------------------------------------------------
+
+
+* Creating a simple stored procedure without any parameters :- 
+
+	- This stored procedure, retrieves Name and Gender of all the employees. 
+	
+	- To create a stored procedure we use, CREATE PROCEDURE or CREATE PROC statement.
+
+
+
+		CREATE PROCEDURE spGetEmployees
+		AS
+		BEGIN
+			SELECT Name, Gender from tblEmployee
+		END
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* Note: When naming user defined stored procedures, Microsoft recommends not to use "sp_" as a prefix. 
+	
+	- All system stored procedures, are prefixed with "sp_". 
+	
+	-This avoids any ambiguity between user defined and system stored procedures and any conflicts, with some future system procedure.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* To execute the stored procedure:-
+	- you can just type the procedure name and press F5, 
+		or 
+	- use EXEC or EXECUTE keywords followed by the procedure name as shown below.
+
+		1. spGetEmployees
+		2. EXEC spGetEmployees
+		3. Execute spGetEmployees
+
+
+Note: You can also right click on the procedure name, in object explorer in SQL Server Management Studio and select EXECUTE STORED PROCEDURE.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Creating a stored procedure with input parameters :-
+	- This SP, accepts GENDER and DEPARTMENTID parameters. 
+	- Parameters and variables have an @ prefix in their name
+
+
+
+		CREATE PROCEDURE spGetEmployeesByGenderAndDepartmnet
+		@Gender nvarchar(50),
+		@DepartmentId int
+		AS
+		BEGIN
+			SELECT Name, Gender FROM tblEmployee3
+			WHERE Gender=@Gender AND DepartmentId= @DepartmentId 
+		END
+
+
+* To invoke this procedure :- 
+	- we need to pass the value for @Gender and @DepartmentId parameters. 
+ 	
+	- If you don't specify the name of the parameters, you have to first pass value for @Gender parameter and then for @DepartmentId.
+
+
+		
+		EXECUTE spGetEmployeesByGenderAndDepartment 'Male', 1
+
+
+
+* On the other hand, if you change the order :-
+	- you will get an error stating "Error converting data type varchar to int." 
+	- This is because, the value of "Male" is passed into @DepartmentId parameter. 
+	- Since @DepartmentId is an integer, we get the type conversion error.
+		
+		spGetEmployeesByGenderAndDepartment 1, 'Male'
+
+
+
+
+
+-  When you specify the names of the parameters when executing the stored procedure the order doesn't matter.
+
+	
+	EXECUTE spGetEmployeesByGenderAndDepartment @DepartmentId=1, @Gender = 'Male'
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* Different Ways to Execute Stored Precedure :-
+
+	EXECUTE spGetEmployeesByGenderAndDepartmnet Male, 1
+	
+	EXEC spGetEmployeesByGenderAndDepartmnet 'Female', 3
+
+	spGetEmployeesByGenderAndDepartmnet @Gender=Female, @DepartmentId=2
+
+	spGetEmployeesByGenderAndDepartmnet @Gender='male', @DepartmentId=2 		# not case sensitive
+
+	spGetEmployeesByGenderAndDepartmnet @Gender='Female', @DepartmentId=2
+
+=====================================================================================================================
+
+* To view the text, of the stored procedure :-
+
+	1. Use system stored procedure sp_helptext 'SPName'
+
+
+Text
+CREATE PROCEDURE spGetEmployeesByGenderAndDepartmnet  
+@Gender nvarchar(50),  
+@DepartmentId int  
+AS  
+BEGIN  
+ SELECT Name, Gender FROM tblEmployee3  
+ WHERE Gender=@Gender AND DepartmentId= @DepartmentId   
+END
+
+
+		OR
+
+
+	2. Right Click the SP in Object explorer -> Scrip Procedure as -> Create To -> New Query Editor Window
+
+
+
+USE [sample]
+GO
+
+/****** Object:  StoredProcedure [dbo].[spGetEmployeesByGenderAndDepartmnet]    Script Date: 06-04-2023 16:50:45 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[spGetEmployeesByGenderAndDepartmnet]
+@Gender nvarchar(50),
+@DepartmentId int
+AS
+BEGIN
+	SELECT Name, Gender FROM tblEmployee3
+	WHERE Gender=@Gender AND DepartmentId= @DepartmentId 
+END
+GO
+
+======================================================================================================================
+
+* To change the stored procedure, use ALTER PROCEDURE statement :-
+
+
+		ALTER PROCEDURE spGetEmployees
+		AS
+		BEGIN
+		SELECT Name, Gender from tblEmployee3 ORDER BY Name
+		END
+
+         --------------------------------------------------------------                         ---------------------------------------------------------------
+
+
+		ALTER PROCEDURE spGetEmployeesByGenderAndDepartmnet
+		@Gender nvarchar(50),
+		@DepartmentId int
+		AS
+		BEGIN
+			SELECT Name, Gender FROM tblEmployee3
+			WHERE Gender=@Gender AND DepartmentId= @DepartmentId 
+			ORDER BY Name
+		END
+
+
+=========================================================================================================================
+
+* To encrypt the text of the SP :-
+	- use WITH ENCRYPTION option. 
+	
+	- Once, encrypted, you cannot view the text of the procedure, using sp_helptext system stored procedure. 
+	- There are ways to obtain the original text, which we will talk about in a later session.
+	- You can delete the encrypted stored procedure 
+
+
+
+		ALTER PROCEDURE spGetEmployeesByGenderAndDepartmnet
+		@Gender nvarchar(50),
+		@DepartmentId int
+		WITH ENCRYPTION
+		AS
+		BEGIN
+			SELECT Name, Gender FROM tblEmployee3
+			WHERE Gender=@Gender AND DepartmentId= @DepartmentId 
+			ORDER BY Name
+		END
+
+			------------------------------------------------
+
+	
+		sp_helptext 'spGetEmployeesByGenderAndDepartmnet'
+	
+		The text for object 'spGetEmployeesByGenderAndDepartmnet' is encrypted.
+
+
+
+====================================================================================================================
+
+* To delete the SP :-
+	 - use DROP PROC 'SPName' or DROP PROCEDURE 'SPName'
+
+
+				Drop PROC spGetEmployees
+
+
+========================================================================================================================
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

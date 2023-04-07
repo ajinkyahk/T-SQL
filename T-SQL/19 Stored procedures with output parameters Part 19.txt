@@ -1,0 +1,334 @@
+*********************************************         Stored procedures with output parameters Part 19         **************************************
+
+* To create an SP with output parameter, we use the keywords OUT or OUTPUT :-
+
+- @EmployeeCount is an OUTPUT parameter. Notice, it is specified with OUTPUT keyword. 
+
+
+		CREATE PROCEDURE spGetEmployeeCountByGender
+		@Gender nvarchar(20),
+		@EmployeeCount int Output
+		AS
+		BEGIN
+			SELECT @EmployeeCount = COUNT(Id)
+			FROM tblEmployee
+			WHERE Gender = @Gender
+		END
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+* To execute this stored procedure with OUTPUT parameter :- 
+
+1. First initialise a variable of the same datatype as that of the output parameter. We have declared @TotalCount integer variable. 
+
+2. Then pass the @TotalCount variable to the SP. 
+	- You have to specify the OUTPUT keyword. 
+ 	- If you don't specify the OUTPUT keyword, the variable will be NULL. 
+
+3. Execute
+
+
+		DECLARE @TotalCount int
+		EXEC spGetEmployeeCountByGender 'Male', @TotalCount OUTPUT
+		PRINT @TotalCOUNT
+
+
+		Messages
+		7
+
+--------------------------               -----------------------------                 ---------------------------------------------             ------------------------------
+
+* If OUTPUT is not declared with @TotalCount :-
+
+
+		DECLARE @TotalCount int
+		EXEC spGetEmployeeCountByGender 'Male', @TotalCount
+		PRINT @TotalCOUNT
+
+		Messages
+		                                              # NULL
+
+-----------------------------------          ---------------------------------------                ----------------------------------------                     ----------------------------------
+
+		DECLARE @TotalCount int
+		EXEC spGetEmployeeCountByGender 'Male', @TotalCount
+		if (@TotalCount IS NULL)
+			PRINT '@TotalCount is null'
+		else
+			PRINT '@TotalCount is not null'
+
+
+		Messages
+		@TotalCount is null
+
+
+* If you don't specify the OUTPUT keyword :-  
+	- when executing the stored procedure, the @TotalCount variable will be NULL. 
+	- Here, we have not specified OUTPUT keyword. 
+	- When you execute, you will see '@TotalCount is null' printed.
+
+
+--------------------------------------------           -------------------------------------------           --------------------------------------           --------------------------------------
+
+* @TotalCount is declared with OUT :-
+
+
+		DECLARE @TotalCount int
+		EXEC spGetEmployeeCountByGender 'Male', @TotalCount OUT
+		if (@TotalCount IS NULL)
+			PRINT '@TotalCount is null'
+		else
+			PRINT '@TotalCount is not null'
+
+
+		Messages
+		@TotalCount is not null
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* You can pass parameters in any order, when you use the parameter names :-
+	- Here, we are first passing the OUTPUT parameter and then the input @Gender parameter.
+
+
+		DECLARE @TotalCount int 
+		EXEC spGetEmployeeCountByGender @EmployeeCount = @TotalCount out, @Gender = 'Male'
+		PRINT @TotalCOUNT
+
+
+======================================================================================================================
+
+* The following system stored procedures, are extremely useful when working procedures :-
+
+* sp_help SP_Name : 
+	View the information about the stored procedure, like parameter names, their datatypes etc. 
+	
+
+* sp_help can be used with any database object, like tables, views, SP's, triggers etc. 
+	
+	sp_help spGetEmployeeCountByGender
+
+
+Name			Owner	Type		Created_datetime
+spGetEmployeeCountByGender	dbo	stored procedure	2023-04-07 14:22:36.800
+
+
+Parameter_name	Type	Length	Prec	Scale	Param_order	Collation
+@Gender		nvarchar	40	20	NULL	1		SQL_Latin1_General_CP1_CI_AS
+@EmployeeCount	int	4	10	0	2		NULL
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* Alternatively, you can also press ALT+F1, when the name of the object is highlighted.
+	
+	highlight     spGetEmployeeCountByGender  ALT+F1
+	
+
+Name				Owner	Type		Created_datetime
+spGetEmployeeCountByGender		dbo	stored procedure	2023-04-07 14:22:36.800
+
+
+Parameter_name	Type	Length	Prec	Scale	Param_order	Collation
+@Gender		nvarchar	40	20	NULL	1		SQL_Latin1_General_CP1_CI_AS
+@EmployeeCount	int	4	10	0	2		NULL
+
+
+=======================================================================================================================
+
+* sp_helptext SP_Name : View the Text of the stored procedure :-
+
+		sp_helptext spGetEmployeeCountByGender
+
+
+CREATE PROCEDURE spGetEmployeeCountByGender  
+@Gender nvarchar(20),  
+@EmployeeCount int Output  
+AS  
+BEGIN  
+ SELECT @EmployeeCount = COUNT(Id)  
+ FROM tblEmployee  
+ WHERE Gender = @Gender  
+END  
+
+======================================================================================================================
+
+* sp_depends SP_Name :- 
+	- View the dependencies of the stored procedure. 
+	- This system SP is very useful, especially if you want to check, 
+	   if there are any stored procedures that are referencing a table that you are abput to drop. 
+	- sp_depends can also be used with other database objects like table etc.
+
+	
+		sp_depends spGetEmployeeCountByGender
+
+
+name		type		updated	selected	column
+dbo.tblEmployee	user table		no	yes	Id
+dbo.tblEmployee	user table		no	yes	Gender
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		sp_depends tblEmployee
+
+name					type
+dbo.spGetEmployeeCountByGender		stored procedure
+dbo.spGetEmployeesByGenderAndDepartmnet	stored procedure
+
+
+========================================================================================================================
+
+* Note: All parameter and variable names in SQL server, need to have the @symbol.
+
+=========================================================================================================================
+
+
+			sp_help tblEmployee3
+
+
+Name		Owner	Type	  Created_datetime
+tblEmployee	dbo	user table	  2023-04-06 16:07:38.770
+
+
+
+Column_name	Type	Computed	Length	Prec	Scale	Nullable	TrimTrailingBlanks	FixedLenNullInSource    Collation
+Id		int	no	4	10   	0    	no	(n/a)		(n/a)		      NULL
+Name		nvarchar	no	100	     	     	no	(n/a)		(n/a)	                        SQL_Latin1_General_CP1_CI_AS
+Gender		nvarchar	no	100	     	     	no	(n/a)		(n/a)		      SQL_Latin1_General_CP1_CI_AS
+DepartmentId	int	no	4	10   	0    	no	(n/a)		(n/a)		      NULL
+
+
+
+Identity	Seed	Increment	Not For Replication
+Id	1	1	0
+
+
+RowGuidCol
+No rowguidcol column defined.
+
+
+Data_located_on_filegroup
+PRIMARY
+
+
+index_name	index_description				index_keys
+PK_tblEmployee	clustered, unique, primary key located on PRIMARY	Id
+
+
+constraint_type		constraint_name	delete_action	update_action	status_enabled	status_for_replication	constraint_keys
+PRIMARY KEY (clustered)	PK_tblEmployee	(n/a)		(n/a)		(n/a)		(n/a)			Id
+
+
+
+==============================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
