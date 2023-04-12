@@ -1,0 +1,212 @@
+*****************************************   Replicate, Space, Patindex, Replace and Stuff functions - Part 24    **********************************
+
+
+* REPLICATE(String_To_Be_Replicated, Number_Of_Times_To_Replicate) :-
+	Repeats the given string, for the specified number of times.
+
+Example: SELECT REPLICATE('Pragim', 3)
+Output: Pragim Pragim Pragim 
+
+
+* A practical example of using REPLICATE() function:-
+ 
+* We will be using this table, for the rest of our examples in this article : -
+
+ID          FirstName                                          LastName                                           Email
+----------- -------------------------------------------------- -------------------------------------------------- --------------------------------------------------
+1           Sam                                                Sony                                               Sam@aaa.com
+2           Ram                                                Barber                                             Ram@aaa.com
+3           Sara                                               Sanosky                                            Sara@ccc.com
+4           Todd                                               Gartner                                            Todd@bbb.com
+5           John                                               Grover                                             John@aaa.com
+6           Sana                                               Lenin                                              Sana@ccc.com
+7           James                                              Bond                                               James@bbb.com
+8           Rob                                                Hunter                                             Rob@ccc.com
+9           Steve                                              Wilson                                             Steve@aaa.com
+10          Pam                                                Broker                                             Pam@bbb.com
+
+(10 rows affected)
+
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* Let's mask the email with 5 * (star) symbols. The output should be as shown below:-
+
+
+* Query:-
+
+	Select FirstName, LastName, SUBSTRING(Email, 1, 2) + REPLICATE('*',5) + 
+	SUBSTRING(Email, CHARINDEX('@',Email), LEN(Email) - CHARINDEX('@',Email)+1) as Email
+	from tblEmployee
+
+
+
+
+ID          FirstName                                          LastName                                           Email
+----------- -------------------------------------------------- -------------------------------------------------- ---------------------------------------------------------
+1           Sam                                                Sony                                               Sa*****@aaa.com
+2           Ram                                                Barber                                             Ra*****@aaa.com
+3           Sara                                               Sanosky                                            Sa*****@ccc.com
+4           Todd                                               Gartner                                            To*****@bbb.com
+5           John                                               Grover                                             Jo*****@aaa.com
+6           Sana                                               Lenin                                              Sa*****@ccc.com
+7           James                                              Bond                                               Ja*****@bbb.com
+8           Rob                                                Hunter                                             Ro*****@ccc.com
+9           Steve                                              Wilson                                             St*****@aaa.com
+10          Pam                                                Broker                                             Pa*****@bbb.com
+
+(10 rows affected)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* SPACE(Number_Of_Spaces) :- 
+	Returns number of spaces, specified by the Number_Of_Spaces argument.
+
+
+Example: The SPACE(5) function, inserts 5 spaces between FirstName and LastName
+
+	Select FirstName + SPACE(5) + LastName as FullName
+	From tblEmployee
+
+
+FullName
+---------------------------------------------------------------------------------------------------------
+Sam     Sony
+Ram     Barber
+Sara     Sanosky
+Todd     Gartner
+John     Grover
+Sana     Lenin
+James     Bond
+Rob     Hunter
+Steve     Wilson
+Pam     Broker
+
+(10 rows affected)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* PATINDEX('%Pattern%', Expression) :-
+	Returns the starting position of the first occurrence of a pattern in a specified expression. 
+	It takes two arguments, the pattern to be searched and the expression. 
+	PATINDEX() is simial to CHARINDEX(). With CHARINDEX() we cannot use wildcards, where as PATINDEX() provides this capability. 
+	If the specified pattern is not found, PATINDEX() returns ZERO.
+
+
+* Example:-
+ 
+		Select Email, PATINDEX('%@aaa.com', Email) as FirstOccurence 
+		from tblEmployee
+		Where PATINDEX('%@aaa.com', Email) > 0
+
+
+* Output:-
+
+Email                                              FirstOccurrence
+-------------------------------------------------- ---------------
+Sam@aaa.com                                        4
+Ram@aaa.com                                        4
+John@aaa.com                                       5
+Steve@aaa.com                                      6
+
+(4 rows affected)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+* REPLACE(String_Expression, Pattern , Replacement_Value) :-
+	Replaces all occurrences of a specified string value with another string value.
+
+
+* Example:-
+	 All .COM strings are replaced with .NET
+
+
+		Select Email, REPLACE(Email, '.com', '.net') as ConvertedEmail
+		from  tblEmployee
+
+
+Email                                              ConvertedEmail
+-------------------------------------------------- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Sam@aaa.com                                        Sam@aaa.net
+Ram@aaa.com                                        Ram@aaa.net
+Sara@ccc.com                                       Sara@ccc.net
+Todd@bbb.com                                       Todd@bbb.net
+John@aaa.com                                       John@aaa.net
+Sana@ccc.com                                       Sana@ccc.net
+James@bbb.com                                      James@bbb.net
+Rob@ccc.com                                        Rob@ccc.net
+Steve@aaa.com                                      Steve@aaa.net
+Pam@bbb.com                                        Pam@bbb.net
+
+(10 rows affected)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+* STUFF(Original_Expression, Start, Length, Replacement_expression) :-
+	STUFF() function inserts Replacement_expression, at the start position specified, 
+	along with removing the charactes specified using Length parameter.
+
+
+* Example:-
+
+
+		Select FirstName, LastName,Email, STUFF(Email, 2, 3, '*****') as StuffedEmail
+		From tblEmployee
+
+* Output:-
+
+
+Email                                              StuffedEmail
+-------------------------------------------------- ----------------------------------------------------
+Sam@aaa.com                                        S*****aaa.com
+Ram@aaa.com                                        R*****aaa.com
+Sara@ccc.com                                       S*****@ccc.com
+Todd@bbb.com                                       T*****@bbb.com
+John@aaa.com                                       J*****@aaa.com
+Sana@ccc.com                                       S*****@ccc.com
+James@bbb.com                                      J*****s@bbb.com
+Rob@ccc.com                                        R*****ccc.com
+Steve@aaa.com                                      S*****e@aaa.com
+Pam@bbb.com                                        P*****bbb.com
+
+(10 rows affected)
+
+
+
+=========================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
